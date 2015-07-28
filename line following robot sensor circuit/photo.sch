@@ -6,10 +6,10 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="mil" style="lines" multiple="1" display="no" altdistance="50" altunitdist="mil" altunit="mil"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="no"/>
+<layer number="16" name="Bottom" color="7" fill="1" visible="yes" active="no"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="no"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="no"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="no"/>
@@ -3596,20 +3596,15 @@ W = angled&lt;p&gt;
 <parts>
 <part name="LED1" library="adafruit" deviceset="LED" device="3MM"/>
 <part name="T1" library="opto-trans-siemens" deviceset="LPT80A" device="" value=""/>
-<part name="R1" library="adafruit" deviceset="R-US_" device="0207/7" value="4.7k"/>
-<part name="R2" library="adafruit" deviceset="R-US_" device="0207/2V" value="100"/>
+<part name="R2" library="adafruit" deviceset="R-US_" device="0204/7" value="100"/>
 <part name="LED2" library="adafruit" deviceset="LED" device="3MM"/>
 <part name="T2" library="opto-trans-siemens" deviceset="LPT80A" device="" value=""/>
-<part name="R3" library="adafruit" deviceset="R-US_" device="0207/7" value="4.7k"/>
 <part name="LED3" library="adafruit" deviceset="LED" device="3MM"/>
 <part name="T3" library="opto-trans-siemens" deviceset="LPT80A" device="" value=""/>
-<part name="R5" library="adafruit" deviceset="R-US_" device="0207/7" value="4.7k"/>
 <part name="LED4" library="adafruit" deviceset="LED" device="3MM"/>
 <part name="T4" library="opto-trans-siemens" deviceset="LPT80A" device="" value=""/>
-<part name="R7" library="adafruit" deviceset="R-US_" device="0207/7" value="4.7k"/>
 <part name="LED5" library="adafruit" deviceset="LED" device="3MM"/>
 <part name="T5" library="opto-trans-siemens" deviceset="LPT80A" device="" value=""/>
-<part name="R9" library="adafruit" deviceset="R-US_" device="0207/7" value="4.7k"/>
 <part name="SV1" library="con-lstb" deviceset="MA07-1" device=""/>
 </parts>
 <sheets>
@@ -3619,20 +3614,15 @@ W = angled&lt;p&gt;
 <instances>
 <instance part="LED1" gate="G$1" x="30.48" y="-5.08"/>
 <instance part="T1" gate="1" x="20.32" y="-5.08"/>
-<instance part="R1" gate="G$1" x="22.86" y="27.94" rot="R90"/>
-<instance part="R2" gate="G$1" x="10.16" y="40.64"/>
+<instance part="R2" gate="G$1" x="5.08" y="40.64"/>
 <instance part="LED2" gate="G$1" x="55.88" y="-5.08"/>
 <instance part="T2" gate="1" x="45.72" y="-5.08"/>
-<instance part="R3" gate="G$1" x="48.26" y="27.94" rot="R90"/>
 <instance part="LED3" gate="G$1" x="81.28" y="-5.08"/>
 <instance part="T3" gate="1" x="71.12" y="-5.08"/>
-<instance part="R5" gate="G$1" x="73.66" y="27.94" rot="R90"/>
 <instance part="LED4" gate="G$1" x="104.14" y="-5.08"/>
 <instance part="T4" gate="1" x="93.98" y="-5.08"/>
-<instance part="R7" gate="G$1" x="96.52" y="27.94" rot="R90"/>
 <instance part="LED5" gate="G$1" x="129.54" y="-5.08"/>
 <instance part="T5" gate="1" x="119.38" y="-5.08"/>
-<instance part="R9" gate="G$1" x="121.92" y="27.94" rot="R90"/>
 <instance part="SV1" gate="1" x="-7.62" y="10.16" rot="MR180"/>
 </instances>
 <busses>
@@ -3640,46 +3630,34 @@ W = angled&lt;p&gt;
 <nets>
 <net name="N$8" class="0">
 <segment>
-<pinref part="R1" gate="G$1" pin="1"/>
 <pinref part="T1" gate="1" pin="C"/>
-<wire x1="22.86" y1="22.86" x2="22.86" y2="12.7" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="3"/>
 <wire x1="22.86" y1="12.7" x2="22.86" y2="0" width="0.1524" layer="91"/>
 <wire x1="0" y1="12.7" x2="22.86" y2="12.7" width="0.1524" layer="91"/>
-<junction x="22.86" y="12.7"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
-<pinref part="R3" gate="G$1" pin="1"/>
 <pinref part="T2" gate="1" pin="C"/>
-<wire x1="48.26" y1="22.86" x2="48.26" y2="10.16" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="4"/>
 <wire x1="48.26" y1="10.16" x2="48.26" y2="0" width="0.1524" layer="91"/>
 <wire x1="0" y1="10.16" x2="48.26" y2="10.16" width="0.1524" layer="91"/>
-<junction x="48.26" y="10.16"/>
 </segment>
 </net>
 <net name="N$10" class="0">
 <segment>
-<pinref part="R5" gate="G$1" pin="1"/>
 <pinref part="T3" gate="1" pin="C"/>
-<wire x1="73.66" y1="22.86" x2="73.66" y2="7.62" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="5"/>
 <wire x1="73.66" y1="7.62" x2="73.66" y2="0" width="0.1524" layer="91"/>
 <wire x1="0" y1="7.62" x2="73.66" y2="7.62" width="0.1524" layer="91"/>
-<junction x="73.66" y="7.62"/>
 </segment>
 </net>
 <net name="N$15" class="0">
 <segment>
-<pinref part="R7" gate="G$1" pin="1"/>
 <pinref part="T4" gate="1" pin="C"/>
-<wire x1="96.52" y1="22.86" x2="96.52" y2="5.08" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="6"/>
 <wire x1="96.52" y1="5.08" x2="96.52" y2="0" width="0.1524" layer="91"/>
 <wire x1="0" y1="5.08" x2="96.52" y2="5.08" width="0.1524" layer="91"/>
-<junction x="96.52" y="5.08"/>
 </segment>
 </net>
 <net name="N$17" class="0">
@@ -3733,13 +3711,10 @@ W = angled&lt;p&gt;
 </net>
 <net name="N$19" class="0">
 <segment>
-<pinref part="R9" gate="G$1" pin="1"/>
 <pinref part="T5" gate="1" pin="C"/>
-<wire x1="121.92" y1="22.86" x2="121.92" y2="2.54" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="7"/>
 <wire x1="121.92" y1="2.54" x2="121.92" y2="0" width="0.1524" layer="91"/>
 <wire x1="0" y1="2.54" x2="121.92" y2="2.54" width="0.1524" layer="91"/>
-<junction x="121.92" y="2.54"/>
 </segment>
 </net>
 <net name="N$2" class="0">
@@ -3752,38 +3727,18 @@ W = angled&lt;p&gt;
 <wire x1="81.28" y1="-2.54" x2="81.28" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="LED2" gate="G$1" pin="A"/>
 <wire x1="55.88" y1="-2.54" x2="55.88" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="LED1" gate="G$1" pin="A"/>
-<wire x1="30.48" y1="-2.54" x2="30.48" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="R1" gate="G$1" pin="2"/>
-<wire x1="22.86" y1="40.64" x2="22.86" y2="33.02" width="0.1524" layer="91"/>
-<pinref part="R3" gate="G$1" pin="2"/>
-<wire x1="48.26" y1="33.02" x2="48.26" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="R5" gate="G$1" pin="2"/>
-<wire x1="48.26" y1="40.64" x2="30.48" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="30.48" y1="40.64" x2="22.86" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="33.02" x2="73.66" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="40.64" x2="55.88" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="R7" gate="G$1" pin="2"/>
-<wire x1="55.88" y1="40.64" x2="48.26" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="96.52" y1="33.02" x2="96.52" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="96.52" y1="40.64" x2="81.28" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="R9" gate="G$1" pin="2"/>
-<wire x1="81.28" y1="40.64" x2="73.66" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="33.02" x2="121.92" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="40.64" x2="104.14" y2="40.64" width="0.1524" layer="91"/>
-<junction x="48.26" y="40.64"/>
-<junction x="73.66" y="40.64"/>
-<junction x="96.52" y="40.64"/>
-<pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="104.14" y1="40.64" x2="96.52" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="15.24" y1="40.64" x2="22.86" y2="40.64" width="0.1524" layer="91"/>
-<junction x="22.86" y="40.64"/>
-<wire x1="129.54" y1="40.64" x2="121.92" y2="40.64" width="0.1524" layer="91"/>
-<junction x="30.48" y="40.64"/>
-<junction x="55.88" y="40.64"/>
+<wire x1="81.28" y1="40.64" x2="55.88" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="40.64" x2="81.28" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="40.64" x2="104.14" y2="40.64" width="0.1524" layer="91"/>
 <junction x="81.28" y="40.64"/>
 <junction x="104.14" y="40.64"/>
-<junction x="121.92" y="40.64"/>
+<pinref part="R2" gate="G$1" pin="2"/>
+<wire x1="55.88" y1="40.64" x2="30.48" y2="40.64" width="0.1524" layer="91"/>
+<pinref part="LED1" gate="G$1" pin="A"/>
+<wire x1="30.48" y1="40.64" x2="10.16" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="30.48" y1="-2.54" x2="30.48" y2="40.64" width="0.1524" layer="91"/>
+<junction x="30.48" y="40.64"/>
+<junction x="55.88" y="40.64"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -3791,7 +3746,6 @@ W = angled&lt;p&gt;
 <pinref part="SV1" gate="1" pin="1"/>
 <wire x1="0" y1="17.78" x2="0" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="R2" gate="G$1" pin="1"/>
-<wire x1="0" y1="40.64" x2="5.08" y2="40.64" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
