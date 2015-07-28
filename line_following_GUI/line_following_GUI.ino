@@ -79,6 +79,12 @@ void setup()
 	}
 
 	lcd.setCursor(0,0);
+	lcd.print("   PD control   ");
+	lcd.setCursor(0,1);
+	lcd.print(" line following ");
+	delay(2000);
+	lcd.clear();
+	lcd.setCursor(0,0);
 	lcd.print("Initializing...");
 	EEPROM.get(0, Kp);
 	EEPROM.get(10, Kd);
@@ -86,6 +92,7 @@ void setup()
 	EEPROM.get(30, B_W);
 	EEPROM.get(40, SampleTime);
 	delay(1000);
+
 	if(isnan(Kp))	Kp = 40.0;
 	if(isnan(Kd))	Kd = 0.0;
 	if(isnan(SampleTime))	SampleTime = 30;
@@ -103,8 +110,8 @@ void loop()
 		Map = 0;
 		for (int i = 0; i <= 4; i++)
 		{
-			if (B_W == LOW)	sensor_state[i] = !digitalRead(sensor_pin[i]);
-			else	sensor_state[i] = digitalRead(sensor_pin[i]);
+			if (B_W == LOW)	sensor_state[i] = !digitalRead(sensor_pin[4-i]);
+			else	sensor_state[i] = digitalRead(sensor_pin[4-i]);
 			Map = Map | sensor_state[i];
 			Map = Map << 1; 
 		}
@@ -159,31 +166,31 @@ void loop()
 			output = constrain(output, -2*MaxSpeed, 2*MaxSpeed);
 			if (output > -MaxSpeed && output <0)
 			{
-				digitalWrite(M1,HIGH);   
-				digitalWrite(M2, HIGH);       
-				analogWrite(E1, MaxSpeed);   
-				analogWrite(E2, MaxSpeed - abs(output));   
+				digitalWrite(M2,LOW);   
+				digitalWrite(M1, LOW);       
+				analogWrite(E2, MaxSpeed);   
+				analogWrite(E1, MaxSpeed - abs(output));   
 			}
 			else if(output >= 0 && output < MaxSpeed)
 			{
-				digitalWrite(M1,HIGH);   
-				digitalWrite(M2, HIGH);       
-				analogWrite(E1, MaxSpeed - abs(output));   
-				analogWrite(E2, MaxSpeed);   
+				digitalWrite(M2,LOW);   
+				digitalWrite(M1, LOW);       
+				analogWrite(E2, MaxSpeed - abs(output));   
+				analogWrite(E1, MaxSpeed);   
 			}
 			else if(output >= MaxSpeed && output <= 2*MaxSpeed)
 			{
-			    digitalWrite(M1,LOW);   //反轉
-			    digitalWrite(M2, HIGH);       
-			    analogWrite(E1, abs(output) - MaxSpeed);   
-			    analogWrite(E2, MaxSpeed); 
+			    digitalWrite(M2,HIGH);   //反轉
+			    digitalWrite(M1, LOW);       
+			    analogWrite(E2, abs(output) - MaxSpeed);   
+			    analogWrite(E1, MaxSpeed); 
 			} 
 			else if(output >= -2*MaxSpeed && output <= -MaxSpeed)
 			{
-				digitalWrite(M1,HIGH);   
-			    digitalWrite(M2, LOW);     //反轉  
-			    analogWrite(E1, MaxSpeed);   
-			    analogWrite(E2, abs(output) - MaxSpeed);   
+				digitalWrite(M2,LOW);   
+			    digitalWrite(M1, HIGH);     //反轉  
+			    analogWrite(E2, MaxSpeed);   
+			    analogWrite(E1, abs(output) - MaxSpeed);   
 			}
 			lastTime = now;
 			lastinput = input;
@@ -248,26 +255,13 @@ void GUI(){
 	switch (page) {
 		case 0:							// info page
 		{
-			if(millis() - timer[1] <= 750){
-				lcd.setCursor(0,0);
-				lcd.print("   PD control   ");
-				lcd.setCursor(0,1);
-				lcd.print(" line following ");
-			}
-			else if(millis() - timer[1] > 750 && millis() - timer[1] <= 1500){
-				lcd.setCursor(0,1);
-				lcd.print(" following Robot");
-			}
-			else if(millis() - timer[1] > 1500 && millis() - timer[1] <=3000){
-				lcd.setCursor(0,0);
-				lcd.print("Kp=" + String(Kp,1) + "  Kd=" + String(Kd,3));
-				lcd.setCursor(0,1);
-				lcd.print("sensor=");
-				for(int i=0; i<=4; i++)	lcd.print(sensor_state[i]);
-				lcd.print(" ");
-				lcd.print(String(input,1));
-			}
-			else	timer[1] = millis();
+			lcd.setCursor(0,0);
+			lcd.print("Kp=" + String(Kp,1) + "  Kd=" + String(Kd,3));
+			lcd.setCursor(0,1);
+			lcd.print("sensor=");
+			for(int i=0; i<=4; i++)	lcd.print(sensor_state[i]);
+			lcd.print(" ");
+			lcd.print(String(input,1));
 		}
 		break;
 		case 1:{
@@ -333,8 +327,8 @@ void GUI(){
 			lcd.print(" B/W LINE");
 			lcd.write((uint8_t)0);
 			lcd.print("  ");
-				if(B_W == 1)	lcd.print('B');
-			else if(B_W == 0) lcd.print('W');
+			if(B_W == 1)	lcd.print("B ");
+			else if(B_W == 0) lcd.print("W ");
 			else lcd.print("ERROR");
 			lcd.write((uint8_t)2);
 		}
