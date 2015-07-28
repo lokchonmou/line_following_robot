@@ -21,11 +21,12 @@ boolean sensor_state[] = {0, 0, 0, 0, 0}; //save the boolean value of edge senso
 byte Map = 0;			//convert the above boolean to a byte, easy to compare
 
 unsigned long timer[] = {0,0};
-long page = 0;		//page number of GUI
+byte page = 0;		//page number of GUI
 
-float input, output, Kp, Kd, lastinput;
-unsigned long lastTime, SampleTime;		//use to control the car
-byte IR_brightness = 220;			//Brightness of IR LED
+float input, output, Kp, Kd, lastinput, SampleTime;
+unsigned long lastTime;		//use to control the car
+byte IR_brightness;			//Brightness of IR LED
+byte B_W;						//0: detect white line, 1: detect black line
 
 byte ENTER[8] = {
 	0b00000,
@@ -76,16 +77,19 @@ void setup()
 		pinMode(sensor_pin[i], INPUT_PULLUP);
 		digitalWrite(sensor_pin[i], HIGH);
 	}
+
 	lcd.setCursor(0,0);
 	lcd.print("Initializing...");
 	EEPROM.get(0, Kp);
 	EEPROM.get(10, Kd);
 	EEPROM.get(20, IR_brightness);
+	EEPROM.get(30, B_W);
+	EEPROM.get(40, SampleTime);
 	delay(1000);
 	if(isnan(Kp))	Kp = 40.0;
 	if(isnan(Kd))	Kd = 0.0;
-	if(IR_brightness == NAN)	IR_brightness = 255;
-	SampleTime = 30;
+	if(isnan(SampleTime))	SampleTime = 30;
+	if(B_W == 255)	B_W = 0;
 }
 
 void loop()
@@ -99,7 +103,8 @@ void loop()
 		Map = 0;
 		for (int i = 0; i <= 4; i++)
 		{
-			sensor_state[i] = !digitalRead(sensor_pin[i]);
+			if (B_W == LOW)	sensor_state[i] = !digitalRead(sensor_pin[i]);
+			else	sensor_state[i] = digitalRead(sensor_pin[i]);
 			Map = Map | sensor_state[i];
 			Map = Map << 1; 
 		}
@@ -198,35 +203,44 @@ void GUI(){
 
 	if(millis() - timer[0] >= 200){
 		if(joyreading <=300){			//joystick up
-			if(page < 5 && page >= 1)	page++;
-			else if(page == 5)	page = 1;
-			else if(page == 6)	Kp++;
-			else if(page == 7)	Kd+=0.1;
-			else if(page == 8)	IR_brightness+=1;
+			if(page < 7 && page >= 1)	page++;
+			else if(page == 7)	page = 1;
+
+			else if(page == 21)	Kp++;
+			else if(page == 22)	Kd+=0.1;
+			else if(page == 23)	IR_brightness+=1;
+			else if(page == 24)	SampleTime+=10;
 			timer[0] = millis();
 		}
 		else if(joyreading >=800){		//joystick down
-			if(page == 1)	page = 5;
-			else if(page <= 5 && page > 1)	page--;
-			else if(page == 6)	Kp--;
-			else if(page == 7)	Kd-=0.1;
-			else if(page == 8)	IR_brightness-=1;
+			if(page == 1)	page = 7;
+			else if(page <= 7 && page > 1)	page--;
+
+			else if(page == 21)	Kp--;
+			else if(page == 22)	Kd-=0.1;
+			else if(page == 23)	IR_brightness-=1;
+			else if(page == 24)	SampleTime-=10;
 			timer[0] = millis();
 		}
 		if(JoystickButton == LOW){		//joystick pressed
 			if(page == 0)		page = 1;
 			else if(page == 1)	page = 0;
-			else if(page == 2)	page = 6;
-			else if(page == 3)	page = 7;
-			else if(page == 4)	page = 8;
+			else if(page == 2)	page = 21;
+			else if(page == 3)	page = 22;
+			else if(page == 4)	page = 23;
 			else if(page == 5)	{
 				EEPROM.put(0, Kp);
 				EEPROM.put(10, Kd);
 				EEPROM.put(20, IR_brightness);
+				EEPROM.put(30, B_W);
+				EEPROM.put(40, SampleTime);
 			}
-			else if(page == 6)	page = 2;
-			else if(page == 7)	page = 3;
-			else if(page == 8)	page = 4;
+			else if(page == 6)	{if(B_W == 0) B_W=1; else if(B_W == 1) B_W=0; else B_W = 0;}
+			else if(page == 7)	page = 24;
+			else if(page == 21)	page = 2;
+			else if(page == 22)	page = 3;
+			else if(page == 23)	page = 4;
+			else if(page == 24) page = 7;
 			timer[0] = millis();
 		}
 	}
@@ -258,7 +272,7 @@ void GUI(){
 		break;
 		case 1:{
 			lcd.setCursor(0,0);
-			lcd.print("  MENU:    (1/5)");
+			lcd.print("  MENU:    (1/7)");
 			lcd.setCursor(0,1);
 			lcd.print(" INFO SCREEN");
 			lcd.write((uint8_t)0);
@@ -269,7 +283,7 @@ void GUI(){
 		break;
 		case 2:{							
 			lcd.setCursor(0,0);
-			lcd.print("  MENU:    (2/5)");
+			lcd.print("  MENU:    (2/7)");
 			lcd.setCursor(0,1);
 			lcd.write((uint8_t)1);
 			lcd.print(" Tune Kp");
@@ -280,7 +294,7 @@ void GUI(){
 		break;
 		case 3:{
 			lcd.setCursor(0,0);
-			lcd.print("  MENU:    (3/5)");
+			lcd.print("  MENU:    (3/7)");
 			lcd.setCursor(0,1);
 			lcd.write((uint8_t)1);
 			lcd.print(" Tune Kd");
@@ -291,7 +305,7 @@ void GUI(){
 		break;
 		case 4:{
 			lcd.setCursor(0,0);
-			lcd.print("  MENU:    (4/5)");
+			lcd.print("  MENU:    (4/7)");
 			lcd.setCursor(0,1);
 			lcd.write((uint8_t)1);
 			lcd.print(" Tune IR LED");
@@ -302,15 +316,41 @@ void GUI(){
 		break;
 		case 5:{
 			lcd.setCursor(0,0);
-			lcd.print("  MENU:    (5/5)");
+			lcd.print("  MENU:    (5/7)");
 			lcd.setCursor(0,1);
 			lcd.write((uint8_t)1);
 			lcd.print(" SAVE DATA");
 			lcd.write((uint8_t)0);
-			lcd.print("    ");
+			lcd.print("   ");
+			lcd.write((uint8_t)2);
 		}
 		break;
 		case 6:{
+			lcd.setCursor(0,0);
+			lcd.print("  MENU:    (6/7)");
+			lcd.setCursor(0,1);
+			lcd.write((uint8_t)1);
+			lcd.print(" B/W LINE");
+			lcd.write((uint8_t)0);
+			lcd.print("  ");
+				if(B_W == 1)	lcd.print('B');
+			else if(B_W == 0) lcd.print('W');
+			else lcd.print("ERROR");
+			lcd.write((uint8_t)2);
+		}
+		break;
+		case 7:{
+			lcd.setCursor(0,0);
+			lcd.print("  MENU:    (7/7)");
+			lcd.setCursor(0,1);
+			lcd.write((uint8_t)1);
+			lcd.print(" SIMPLE TIME");
+			lcd.write((uint8_t)0);
+			lcd.print(" ");
+			lcd.write((uint8_t)2);
+		}
+		break;
+		case 21:{
 			lcd.setCursor(0,0);
 			lcd.write((uint8_t)1);
 			lcd.print("  Kp = " + String(Kp,3)+"     ");
@@ -323,7 +363,7 @@ void GUI(){
 			lcd.print("         ");
 		}
 		break;
-		case 7:{
+		case 22:{
 			lcd.setCursor(0,0);
 			lcd.write((uint8_t)1);
 			lcd.print("  Kd = " + String(Kd,3)+"     ");
@@ -336,7 +376,7 @@ void GUI(){
 			lcd.print("         ");
 		}
 		break;
-		case 8:{
+		case 23:{
 			lcd.setCursor(0,0);
 			lcd.write((uint8_t)1);
 			lcd.print(" IR =   " + String(IR_brightness) + "        ");
@@ -347,6 +387,19 @@ void GUI(){
 			for(int i=0; i<=4; i++)	lcd.print(sensor_state[i]);
 			lcd.print(" ");
 			lcd.print(String(input,1));
+		}
+		break;
+		case 24:{
+			lcd.setCursor(0,0);
+			lcd.write((uint8_t)1);
+			lcd.print(" SIMPLE T=" + String(SampleTime) + "  ");
+			lcd.setCursor(0,15);
+			lcd.write((uint8_t)2);
+			lcd.setCursor(0,1);
+			lcd.write((uint8_t)1);
+			lcd.print(" BACK");
+			lcd.write((uint8_t)0);
+			lcd.print("         ");
 		}
 		break;
 	}
